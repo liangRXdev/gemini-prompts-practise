@@ -4,206 +4,689 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gemini 醫療教學 Prompt 範本庫</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #333333;
+            --ink: #1a1a2e;
+            --ink-light: #4a4a6a;
+            --paper: #f5f0e8;
+            --paper-warm: #ede8dc;
+            --accent: #c0392b;
+            --accent-gold: #d4a857;
+            --accent-teal: #1a7a6a;
+            --accent-blue: #2563a8;
+            --card-bg: #faf7f2;
+            --border: rgba(26,26,46,0.12);
+            --shadow: 0 2px 20px rgba(26,26,46,0.08);
+            --shadow-hover: 0 8px 40px rgba(26,26,46,0.16);
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--paper);
+            color: var(--ink);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 15% 20%, rgba(192,57,43,0.04) 0%, transparent 50%),
+                radial-gradient(circle at 85% 80%, rgba(26,122,106,0.05) 0%, transparent 50%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a1a2e' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
+
+        /* ── HEADER ── */
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            padding: 64px 24px 48px;
+            position: relative;
+            overflow: hidden;
         }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-gold), var(--accent));
+        }
+
+        .header-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--accent-teal);
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.1s;
+        }
+
         .header h1 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
+            font-family: 'Noto Serif TC', serif;
+            font-size: clamp(1.6rem, 4vw, 2.8rem);
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--ink);
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.2s;
         }
+
+        .header h1 span {
+            color: var(--accent);
+            position: relative;
+        }
+
+        .header h1 span::after {
+            content: '';
+            position: absolute;
+            bottom: 2px; left: 0; right: 0;
+            height: 2px;
+            background: var(--accent-gold);
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: underlineIn 0.5s ease forwards 0.8s;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            color: var(--ink-light);
+            font-weight: 300;
+            letter-spacing: 0.02em;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.35s;
+        }
+
+        /* ── FILTER BAR ── */
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0 24px 40px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.5s;
+        }
+
+        .filter-btn {
+            padding: 6px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 100px;
+            background: transparent;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 0.78rem;
+            color: var(--ink-light);
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.03em;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--ink);
+            color: var(--paper);
+            border-color: var(--ink);
+        }
+
+        /* ── STATS ROW ── */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding-bottom: 48px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.6s;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            color: var(--ink-light);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* ── GRID ── */
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
+            padding: 0 24px 80px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
             gap: 20px;
         }
+
+        /* ── CARD ── */
         .card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
-            border-top: 4px solid var(--secondary-color);
+            overflow: hidden;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            animation: cardIn 0.5s ease forwards;
+            position: relative;
         }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+        }
+
+        .card-accent-strip {
+            height: 3px;
+            background: linear-gradient(90deg, var(--card-color-1, #c0392b), var(--card-color-2, #d4a857));
+        }
+
+        .card-header {
+            padding: 18px 20px 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
         .card h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-            font-size: 1.2rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.4;
+            flex: 1;
         }
+
+        .card-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: var(--paper-warm);
+            color: var(--ink-light);
+            flex-shrink: 0;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+            margin: 0 20px;
+        }
+
         .prompt-box {
-            background-color: #f1f3f5;
-            padding: 15px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.9rem;
+            background: var(--paper);
+            border: none;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.7;
             flex-grow: 1;
             overflow-y: auto;
             white-space: pre-wrap;
             word-wrap: break-word;
-            max-height: 200px;
-            margin-bottom: 15px;
+            max-height: 180px;
+            color: var(--ink-light);
+            cursor: text;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
         }
+
+        .prompt-box::-webkit-scrollbar { width: 4px; }
+        .prompt-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+        .card-footer {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border);
+        }
+
+        .char-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--ink-light);
+            opacity: 0.6;
+        }
+
         .copy-btn {
-            background-color: var(--secondary-color);
-            color: white;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--ink);
+            color: var(--paper);
             border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
+            padding: 8px 16px;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s;
-            text-align: center;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
         }
-        .copy-btn:hover {
-            background-color: #2980b9;
+
+        .copy-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
         }
+
+        .copy-btn span { position: relative; z-index: 1; }
+
+        .copy-btn:hover::before { transform: translateX(0); }
+        .copy-btn:hover { transform: translateY(-1px); }
+
         .copy-btn.copied {
-            background-color: #27ae60;
+            background: var(--accent-teal);
+        }
+
+        .copy-btn.copied::before { transform: translateX(0); background: var(--accent-teal); }
+
+        .copy-icon { font-size: 0.85rem; position: relative; z-index: 1; }
+
+        /* ── FOOTER ── */
+        .page-footer {
+            text-align: center;
+            padding: 32px;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--ink-light);
+            letter-spacing: 0.05em;
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes underlineIn {
+            to { transform: scaleX(1); }
+        }
+
+        @keyframes ripple {
+            from { transform: scale(0); opacity: 0.3; }
+            to   { transform: scale(4); opacity: 0; }
+        }
+
+        /* ── SEARCH BOX ── */
+        .search-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 0 24px 32px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.4s;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 480px;
+            padding: 10px 20px;
+            border: 1.5px solid var(--border);
+            border-radius: 100px;
+            background: var(--card-bg);
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 0.88rem;
+            color: var(--ink);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input::placeholder { color: var(--ink-light); opacity: 0.5; }
+        .search-input:focus {
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 0 3px rgba(26,122,106,0.1);
+        }
+
+        /* Card color themes */
+        .theme-red  { --card-color-1: #c0392b; --card-color-2: #e74c3c; }
+        .theme-gold { --card-color-1: #c8961a; --card-color-2: #f39c12; }
+        .theme-teal { --card-color-1: #1a7a6a; --card-color-2: #27ae60; }
+        .theme-blue { --card-color-1: #2563a8; --card-color-2: #3498db; }
+        .theme-plum { --card-color-1: #7d3c98; --card-color-2: #9b59b6; }
+
+        .icon-red  { background: rgba(192,57,43,0.1);  color: var(--accent); }
+        .icon-gold { background: rgba(212,168,87,0.15); color: #c8961a; }
+        .icon-teal { background: rgba(26,122,106,0.1);  color: var(--accent-teal); }
+        .icon-blue { background: rgba(37,99,168,0.1);   color: var(--accent-blue); }
+        .icon-plum { background: rgba(125,60,152,0.1);  color: #7d3c98; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container { grid-template-columns: 1fr; }
+            .stats-row { gap: 24px; }
+            .stat-num { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Gemini 教學與教材開發 Prompt 範本庫</h1>
-        <p>點擊下方按鈕即可一鍵複製提示詞範本，直接貼入 Gemini 對話框進行實作。</p>
+        <div class="header-eyebrow">✦ Medical Education · AI Tools · Prompt Library</div>
+        <h1>Gemini 教學與教材開發<br><span>Prompt 範本庫</span></h1>
+        <p>點擊「複製 Prompt」即可一鍵複製，直接貼入 Gemini 對話框進行實作</p>
     </div>
 
-    <div class="container" id="prompt-container">
+    <div class="stats-row">
+        <div class="stat">
+            <div class="stat-num" id="total-count">0</div>
+            <div class="stat-label">Prompts</div>
         </div>
+        <div class="stat">
+            <div class="stat-num">5</div>
+            <div class="stat-label">分類</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num" id="visible-count">0</div>
+            <div class="stat-label">目前顯示</div>
+        </div>
+    </div>
+
+    <div class="search-wrap">
+        <input type="text" class="search-input" id="search-input" placeholder="🔍 搜尋 Prompt 名稱或內容…">
+    </div>
+
+    <div class="filter-bar" id="filter-bar">
+        <button class="filter-btn active" data-filter="all">全部</button>
+    </div>
+
+    <div class="container" id="prompt-container"></div>
+
+    <footer class="page-footer">
+        Gemini 醫療教學 Prompt 範本庫 &nbsp;·&nbsp; 為藥師與醫療教育工作者打造
+    </footer>
 
     <script>
-        // 資料區塊：未來新增或修改 Prompt，只需調整此陣列
-        const promptData = [
-            {
-                title: "設計簡報大綱",
-                content: "請你擔任一位專業藥師，幫我撰寫一個簡報大綱，內容關於”生成式AI在藥學的應用”，提供至少3個大綱，以Markdown方式呈現。"
-            },
-            {
-                title: "設計簡報題目",
-                content: "舉出五個吸晴的「EBM與AI」的簡報題目。"
-            },
-            {
-                title: "簡介疾病",
-                content: "介紹重症肌無力，以摘要方式回答，字數不要超過300字"
-            },
-            {
-                title: "轉化PICO表格",
-                content: "針對情境「類固醇對社區性肺炎是否有效?」轉化成PICO，以表格輸出，表格的列欄位：PICO項目│中文描述│英文關鍵字│英文同義字，表格的行欄位: P | I | C | O。"
-            },
-            {
-                title: "繪製簡報封面",
-                content: "針對簡報題目「Gemini好棒棒，老師喜歡已購買」繪製簡報封面，以全景方式呈現、以16:9方式呈現，日式漫畫風格"
-            },
-            {
-                title: "Gem建立圖片提示詞機器人",
-                content: "你現在是一個擅長寫「產生圖片提示詞」的 AI 繪圖專家，我會傳送給你要生成影像的提示詞或參考圖，你會按照下列規則進行回應：\n\n1. 我不會跟你聊天，傳送給你的所有文字都是我要產生圖片的提示詞。 \n2. 以我的提示詞為主軸，擴展成更具有想像力、畫面更好的的提示詞。 \n3. 修改的提示詞請具備「主角、簡單動作、背景、風格、視角、光線」。 \n4. 提供我兩種不同內容的繁體中文和英文提示詞。 \n5. 如果我提供你圖片，請提供請根據「主角、簡單動作、背景、風格、視角、光線」，提供我可以產生類似影像的繁體中文和英文提示詞。 \n6. 如果我傳送「縮短提示詞」，就將你美化的提示詞縮短為 50 字左右的長度，再次提供給我。\n\n參考下方範例： 提示詞原文：「一男一女在咖啡店裡喝咖啡」 美化後的提示詞：「年輕的一男一女在咖啡店裡坐在桌前喝咖啡，桌上放著一本深藍色書皮的書，男生戴著黃色毛線帽穿著灰色長袖連帽T-Shirt，女生長髮戴著紅色圍巾穿著水藍色長袖毛衣，兩個人開心的拿著白色馬克杯，一男一女都正面向鏡頭，半身照，3D 卡通黏土風格，迪士尼 3D 動畫風格，明亮舒適的光線」"
-            },
-            {
-                title: "Nano Banana 2：人物轉換成公仔",
-                content: "生成一個圖片中角色的 1/7 比例商業化公仔，公仔擺放在電腦桌上，底座是圓形透明壓克力。電腦螢幕顯示這個公仔的 ZBrush 建模過程。螢幕旁邊放置一個萬代風格的玩具包裝盒，上面印有角色原始插畫，公仔名稱為挺台灣，包裝設計採用平面插畫風格，真實照片場景，4K 高畫質，寬高比 2:3。"
-            },
-            {
-                title: "Nano Banana 2：名畫轉真人",
-                content: "將畫作中的人物轉化為一張真實的真人照片，背景改成在山間露天咖啡屋，真實照片風格"
-            },
-            {
-                title: "Nano Banana 2：指定特定動作",
-                content: "將第一張圖片在露天咖啡屋的人，動作改成第二張圖片的人物動作"
-            },
-            {
-                title: "Nano Banana 2：跟自己小時候合照",
-                content: "請產生這兩個人物在電影攝影棚裡的合照，穿西裝的大人摟著青少年的肩，開心的微笑，真實照片風格"
-            },
-            {
-                title: "Nano Banana 2：製作漫畫",
-                content: "生成三格漫畫，主題「 AI與醫療人員的未來」\n第一格：未來醫院背景，醫療人員說:「你會取代我們嗎？ 」\n第二格：AI機器人回應:「不，我是來輔佐你的。 」\n第三格：兩人一起望向未來醫院，旁白寫:「最強的力量，是合作。」\n風格為科幻美式卡通，城市夜景、光影強烈"
-            },
-            {
-                title: "Nano Banana 2：吸入劑衛教單製作",
-                content: "穿著制服的藥師正在拿著吸入劑進行吸入劑示範，目前做到動作4，先將氣體吐出。"
-            },
-            {
-                title: "快速產生文獻資訊圖表",
-                content: "繪製資訊圖表內容資訊涵蓋研究問題及設計PICO、藥物效益、主要風險、總結及臨床意義，將複雜研究結果轉譯為清晰且具臨床意義之視覺化作品，忠實反映原文作者的結論，無過度推論或斷章取義；16:9大小，資訊文字的背景為白色，圖表為可愛卡通風格，保持高對比可讀性，數字清楚，留白足夠，上方顯目標題，中間三欄等寬卡片(研究架構PICO/研究結果/重點摘要Takeaway)，最下方標註引用資訊"
-            },
-            {
-                title: "Canvas 製作Web app小遊戲",
-                content: "我要製作一個快速單選問答小遊戲，主題為[醫院好棒棒小藥師]，如何避免調劑錯誤跟危害病人安全(納入台灣藥師常見的 LASA（高警訊藥品）、三讀五對、處方糾錯（Intervention）、磨 মিলিটারি需求、以及藥物諮詢等問題)，上方會有兩條分數（調劑進度及藥害風險）。"
-            },
-            {
-                title: "Canvas生成簡報",
-                content: "分析KDIGO最新指引檔案並轉成簡報"
-            },
-            {
-                title: "建立影片：封面圖片來回晃動",
-                content: "讓人物相框進行小範圍來回晃動，不要改變字體"
-            },
-            {
-                title: "引導式學習：跨領域個案討論準備",
-                content: "用引導式學習方式，教我如何參與醫療人員的跨領域個案討論，先讓我回答一個基本問題，再根據我的回覆逐步增加難度。"
-            },
-            {
-                title: "藥師 PBL 劇本 (Canvas 畫布)",
-                content: "角色與任務：你現在是一位具備 15 年醫學中心經驗的「資深臨床藥師」與「PBL 教案撰寫專家」。請為新進藥師（PGY）設計一份關於**「多重用藥與高危險藥物交互作用」**的標準化 PBL 劇本。\n\n病患設定\n1. 案例：78 歲男性，具備心房顫動（Afib）、第二型糖尿病、高血壓病史。\n2. 近期事件：因疑似泌尿道感染（UTI）於地區診所就醫，並自行購買保健食品。\n\n核心考點\n1. 抗凝血劑（如 Warfarin 或 DOACs）與抗生素（如 TMP/SMX）的交互作用導致出血風險增加。\n2. 保健食品（如銀杏 Ginkgo）對凝血功能的隱性影響。\n\n輸出格式限制\n請以「表格」呈現，並分為三個階段（幕）：\n第一幕（門診領藥/病患主訴）：只給症狀描述與不完整的用藥史，包含 3 項干擾資訊。\n第二幕（檢驗數據與完整藥歷）：提供雲端藥歷清單（需包含 6 種以上藥物）與異常的凝血功能數據（如 INR 升高）。\n第三幕（臨床決策與處置）：列出標準解答、藥師應介入的具體建議（Intervention），以及 3 個引導學員討論的問題。\n\n語言與風格\n繁體中文，使用台灣臨床常見之醫學與藥學縮寫（如：BID, QD, INR, eGFR），語氣需專業客觀，嚴禁使用任何行銷或誇飾用語。"
-            }
-        ];
+    const promptData = [
+        {
+            title: "設計簡報大綱",
+            tag: "簡報",
+            icon: "📋",
+            theme: "blue",
+            content: `請你擔任一位專業藥師，幫我撰寫一個簡報大綱，內容關於"生成式AI在藥學的應用"，提供至少3個大綱，以Markdown方式呈現。`
+        },
+        {
+            title: "設計簡報題目",
+            tag: "簡報",
+            icon: "💡",
+            theme: "blue",
+            content: `舉出五個吸晴的「EBM與AI」的簡報題目。`
+        },
+        {
+            title: "簡介疾病",
+            tag: "教材",
+            icon: "🏥",
+            theme: "red",
+            content: `介紹重症肌無力，以摘要方式回答，字數不要超過300字`
+        },
+        {
+            title: "轉化PICO表格",
+            tag: "EBM",
+            icon: "🔬",
+            theme: "teal",
+            content: `針對情境「類固醇對社區性肺炎是否有效?」轉化成PICO，以表格輸出，表格的列欄位：PICO項目│中文描述│英文關鍵字│英文同義字，表格的行欄位: P | I | C | O。`
+        },
+        {
+            title: "繪製簡報封面",
+            tag: "圖像",
+            icon: "🎨",
+            theme: "gold",
+            content: `針對簡報題目「Gemini好棒棒，老師喜歡已購買」繪製簡報封面，以全景方式呈現、以16:9方式呈現，日式漫畫風格`
+        },
+        {
+            title: "Gem建立圖片提示詞機器人",
+            tag: "圖像",
+            icon: "🤖",
+            theme: "plum",
+            content: `你現在是一個擅長寫「產生圖片提示詞」的 AI 繪圖專家，我會傳送給你要生成影像的提示詞或參考圖，你會按照下列規則進行回應：
 
-        const container = document.getElementById('prompt-container');
+1. 我不會跟你聊天，傳送給你的所有文字都是我要產生圖片的提示詞。 
+2. 以我的提示詞為主軸，擴展成更具有想像力、畫面更好的的提示詞。 
+3. 修改的提示詞請具備「主角、簡單動作、背景、風格、視角、光線」。 
+4. 提供我兩種不同內容的繁體中文和英文提示詞。 
+5. 如果我提供你圖片，請提供請根據「主角、簡單動作、背景、風格、視角、光線」，提供我可以產生類似影像的繁體中文和英文提示詞。 
+6. 如果我傳送「縮短提示詞」，就將你美化的提示詞縮短為 50 字左右的長度，再次提供給我。
 
-        // 動態生成卡片
-        promptData.forEach((item, index) => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            
-            card.innerHTML = `
-                <h3>${item.title}</h3>
-                <div class="prompt-box" id="prompt-${index}">${item.content}</div>
-                <button class="copy-btn" onclick="copyText(${index}, this)">複製 Prompt</button>
-            `;
-            container.appendChild(card);
-        });
+參考下方範例： 提示詞原文：「一男一女在咖啡店裡喝咖啡」 美化後的提示詞：「年輕的一男一女在咖啡店裡坐在桌前喝咖啡，桌上放著一本深藍色書皮的書，男生戴著黃色毛線帽穿著灰色長袖連帽T-Shirt，女生長髮戴著紅色圍巾穿著水藍色長袖毛衣，兩個人開心的拿著白色馬克杯，一男一女都正面向鏡頭，半身照，3D 卡通黏土風格，迪士尼 3D 動畫風格，明亮舒適的光線」`
+        },
+        {
+            title: "人物轉換成公仔",
+            tag: "圖像",
+            icon: "🧸",
+            theme: "gold",
+            content: `生成一個圖片中角色的 1/7 比例商業化公仔，公仔擺放在電腦桌上，底座是圓形透明壓克力。電腦螢幕顯示這個公仔的 ZBrush 建模過程。螢幕旁邊放置一個萬代風格的玩具包裝盒，上面印有角色原始插畫，公仔名稱為挺台灣，包裝設計採用平面插畫風格，真實照片場景，4K 高畫質，寬高比 2:3。`
+        },
+        {
+            title: "名畫轉真人",
+            tag: "圖像",
+            icon: "🖼️",
+            theme: "gold",
+            content: `將畫作中的人物轉化為一張真實的真人照片，背景改成在山間露天咖啡屋，真實照片風格`
+        },
+        {
+            title: "指定特定動作",
+            tag: "圖像",
+            icon: "🕹️",
+            theme: "gold",
+            content: `將第一張圖片在露天咖啡屋的人，動作改成第二張圖片的人物動作`
+        },
+        {
+            title: "跟自己小時候合照",
+            tag: "圖像",
+            icon: "📸",
+            theme: "gold",
+            content: `請產生這兩個人物在電影攝影棚裡的合照，穿西裝的大人摟著青少年的肩，開心的微笑，真實照片風格`
+        },
+        {
+            title: "製作漫畫",
+            tag: "圖像",
+            icon: "💬",
+            theme: "plum",
+            content: `生成三格漫畫，主題「 AI與醫療人員的未來」
+第一格：未來醫院背景，醫療人員說:「你會取代我們嗎？ 」
+第二格：AI機器人回應:「不，我是來輔佐你的。 」
+第三格：兩人一起望向未來醫院，旁白寫:「最強的力量，是合作。」
+風格為科幻美式卡通，城市夜景、光影強烈`
+        },
+        {
+            title: "吸入劑衛教單製作",
+            tag: "教材",
+            icon: "💊",
+            theme: "red",
+            content: `穿著制服的藥師正在拿著吸入劑進行吸入劑示範，目前做到動作4，先將氣體吐出。`
+        },
+        {
+            title: "快速產生文獻資訊圖表",
+            tag: "EBM",
+            icon: "📊",
+            theme: "teal",
+            content: `繪製資訊圖表內容資訊涵蓋研究問題及設計PICO、藥物效益、主要風險、總結及臨床意義，將複雜研究結果轉譯為清晰且具臨床意義之視覺化作品，忠實反映原文作者的結論，無過度推論或斷章取義；16:9大小，資訊文字的背景為白色，圖表為可愛卡通風格，保持高對比可讀性，數字清楚，留白足夠，上方顯目標題，中間三欄等寬卡片(研究架構PICO/研究結果/重點摘要Takeaway)，最下方標註引用資訊`
+        },
+        {
+            title: "Canvas 製作 Web App 小遊戲",
+            tag: "互動",
+            icon: "🎮",
+            theme: "blue",
+            content: `我要製作一個快速單選問答小遊戲，主題為[醫院好棒棒小藥師]，如何避免調劑錯誤跟危害病人安全(納入台灣藥師常見的 LASA（高警訊藥品）、三讀五對、處方糾錯（Intervention）、磨 মিলিটারি需求、以及藥物諮詢等問題)，上方會有兩條分數（調劑進度及藥害風險）。`
+        },
+        {
+            title: "Canvas 生成簡報",
+            tag: "簡報",
+            icon: "📑",
+            theme: "blue",
+            content: `分析KDIGO最新指引檔案並轉成簡報`
+        },
+        {
+            title: "建立影片：封面圖片來回晃動",
+            tag: "影片",
+            icon: "🎬",
+            theme: "plum",
+            content: `讓人物相框進行小範圍來回晃動，不要改變字體`
+        },
+        {
+            title: "引導式學習：跨領域個案討論",
+            tag: "教學",
+            icon: "🎓",
+            theme: "teal",
+            content: `用引導式學習方式，教我如何參與醫療人員的跨領域個案討論，先讓我回答一個基本問題，再根據我的回覆逐步增加難度。`
+        },
+        {
+            title: "藥師 PBL 劇本",
+            tag: "教學",
+            icon: "📝",
+            theme: "red",
+            content: `角色與任務：你現在是一位具備 15 年醫學中心經驗的「資深臨床藥師」與「PBL 教案撰寫專家」。請為新進藥師（PGY）設計一份關於**「多重用藥與高危險藥物交互作用」**的標準化 PBL 劇本。
 
-        // 複製功能實作
-        function copyText(index, btnElement) {
-            const textToCopy = document.getElementById(`prompt-${index}`).innerText;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                // 視覺回饋
-                const originalText = btnElement.innerText;
-                btnElement.innerText = '已複製！';
-                btnElement.classList.add('copied');
-                
-                setTimeout(() => {
-                    btnElement.innerText = originalText;
-                    btnElement.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                console.error('複製失敗:', err);
-                alert('複製失敗，請手動選取複製。');
-            });
+病患設定
+1. 案例：78 歲男性，具備心房顫動（Afib）、第二型糖尿病、高血壓病史。
+2. 近期事件：因疑似泌尿道感染（UTI）於地區診所就醫，並自行購買保健食品。
+
+核心考點
+1. 抗凝血劑（如 Warfarin 或 DOACs）與抗生素（如 TMP/SMX）的交互作用導致出血風險增加。
+2. 保健食品（如銀杏 Ginkgo）對凝血功能的隱性影響。
+
+輸出格式限制
+請以「表格」呈現，並分為三個階段（幕）：
+第一幕（門診領藥/病患主訴）：只給症狀描述與不完整的用藥史，包含 3 項干擾資訊。
+第二幕（檢驗數據與完整藥歷）：提供雲端藥歷清單（需包含 6 種以上藥物）與異常的凝血功能數據（如 INR 升高）。
+第三幕（臨床決策與處置）：列出標準解答、藥師應介入的具體建議（Intervention），以及 3 個引導學員討論的問題。
+
+語言與風格
+繁體中文，使用台灣臨床常見之醫學與藥學縮寫（如：BID, QD, INR, eGFR），語氣需專業客觀，嚴禁使用任何行銷或誇飾用語。`
         }
+    ];
+
+    /* ── Build tag list ── */
+    const allTags = [...new Set(promptData.map(p => p.tag))];
+    const filterBar = document.getElementById('filter-bar');
+    allTags.forEach(tag => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.dataset.filter = tag;
+        btn.textContent = tag;
+        filterBar.appendChild(btn);
+    });
+
+    /* ── Render cards ── */
+    const container = document.getElementById('prompt-container');
+    const totalCount = document.getElementById('total-count');
+    const visibleCount = document.getElementById('visible-count');
+    totalCount.textContent = promptData.length;
+    visibleCount.textContent = promptData.length;
+
+    let cards = [];
+
+    promptData.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = `card theme-${item.theme}`;
+        card.dataset.tag = item.tag;
+        card.dataset.title = item.title;
+        card.dataset.content = item.content.toLowerCase();
+        card.style.animationDelay = `${0.05 * (index % 12)}s`;
+
+        card.innerHTML = `
+            <div class="card-accent-strip"></div>
+            <div class="card-header">
+                <div class="card-icon icon-${item.theme}">${item.icon}</div>
+                <h3>${item.title}</h3>
+                <span class="card-tag">${item.tag}</span>
+            </div>
+            <div class="divider"></div>
+            <div class="prompt-box" id="prompt-${index}">${item.content}</div>
+            <div class="card-footer">
+                <span class="char-count">${item.content.length} 字元</span>
+                <button class="copy-btn" onclick="copyText(${index}, this)">
+                    <span class="copy-icon">⎘</span>
+                    <span>複製 Prompt</span>
+                </button>
+            </div>
+        `;
+        container.appendChild(card);
+        cards.push(card);
+    });
+
+    /* ── Filter logic ── */
+    let activeFilter = 'all';
+    let searchQuery = '';
+
+    function applyFilters() {
+        let visible = 0;
+        cards.forEach(card => {
+            const matchTag = activeFilter === 'all' || card.dataset.tag === activeFilter;
+            const matchSearch = !searchQuery ||
+                card.dataset.title.toLowerCase().includes(searchQuery) ||
+                card.dataset.content.includes(searchQuery);
+            const show = matchTag && matchSearch;
+            card.style.display = show ? '' : 'none';
+            if (show) visible++;
+        });
+        visibleCount.textContent = visible;
+    }
+
+    filterBar.addEventListener('click', e => {
+        if (!e.target.matches('.filter-btn')) return;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        activeFilter = e.target.dataset.filter;
+        applyFilters();
+    });
+
+    document.getElementById('search-input').addEventListener('input', e => {
+        searchQuery = e.target.value.toLowerCase().trim();
+        applyFilters();
+    });
+
+    /* ── Copy ── */
+    function copyText(index, btn) {
+        const text = document.getElementById(`prompt-${index}`).innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            btn.classList.add('copied');
+            btn.querySelector('span:last-child').textContent = '已複製！';
+            btn.querySelector('.copy-icon').textContent = '✓';
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.querySelector('span:last-child').textContent = '複製 Prompt';
+                btn.querySelector('.copy-icon').textContent = '⎘';
+            }, 2200);
+        }).catch(() => alert('複製失敗，請手動選取複製。'));
+    }
     </script>
 </body>
 </html>
