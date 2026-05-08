@@ -1,6 +1,6 @@
 # 🏥 Gemini 醫療教學 Prompt 範本庫 (教學練習用)
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Click_Here-blue?style=for-the-badge&logo=github)](https://lianggaga927-beep.github.io/gemini-prompts-practise/)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Click_Here-blue?style=for-the-badge&logo=github)](https://liangrxdev.github.io/gemini-prompts-practise/)
 
 這是一個專為**臨床教師、藥師與醫療專業人員**打造的輕量化提示詞（Prompt）開源範本庫。旨在降低醫療人員使用生成式 AI（如 Google Gemini）的門檻，將高耗時的教學準備工作（如設計教案、製作衛教單張、彙整文獻）轉化為高效的人機協作流程。
 * PS. 主要為2026/04/30 院內 Gemini 基礎課程教學用
