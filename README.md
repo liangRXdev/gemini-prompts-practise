@@ -30,7 +30,7 @@
 
 1.  **Fork 或 Clone 專案**：
     ```bash
-    git clone [https://github.com/lianggaga927-beep/gemini-prompts-practise.git](https://github.com/lianggaga927-beep/gemini-prompts-practise.git)
+    git clone [https://github.com/liangrxdev/gemini-prompts-practise.git](https://github.com/liangrxdev/gemini-prompts-practise.git)
     ```
 2.  **編輯 `index.html`**：
     找到程式碼後段 `<script>` 標籤內的 `promptData` 陣列，按照 JSON 格式新增物件：
